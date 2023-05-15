@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+
+<div>
+    <select id="mySelect">
+        <option value="ID" selected>ID</option>
+        <option value="name">name</option>
+        <option value="price">price</option>
+        <option value="date">date</option>
+    </select>
+    <span>=</span>
+    <input type="text" id="equal">
+
+</div>
+
+<div id="app">
+    <button v-on:click="handleClick">顯示資料</button>
+    <button v-on:click="handleClick1" title="顯示全部資料">顯示全部</button>
+    <button onclick="window.location.href='http://localhost:3000'">前往新增頁面</button>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>name</th>
+            <th>price</th>
+            <th>date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in data">
+            <td>{{ item.ID }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.d }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                data: []
+            };
+        },
+        methods: {
+            async handleClick() {
+                console.log("data");
+                const selectElement = document.getElementById("mySelect");
+                const equal = document.getElementById("equal");
+                const equaltext = equal.value.toString();
+                const selectedValue = selectElement.value.toString();
+
+                const url = "http://localhost:3000/api?finding=" + selectedValue + "&value1=" + equaltext; // 資料傳送到的 URL
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                    });
+                    const res_data = await response.json();
+                    this.data = res_data;
+                    console.log("成功", res_data);
+                } catch (error) {
+                    console.log("錯誤", error);
+                }
+            },
+            async handleClick1() {
+                console.log("data");
+                const selectElement = document.getElementById("mySelect");
+                const equal = document.getElementById("equal");
+                const equaltext = equal.value.toString();
+                const selectedValue = selectElement.value.toString();
+
+                const url = "http://localhost:3000/api/all"; // 資料傳送到的 URL
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                    });
+                    const res_data = await response.json();
+                    this.data = res_data;
+                    console.log("成功", res_data);
+                } catch (error) {
+                    console.log("錯誤", error);
+                }
+            }
+        }
+    });
+
+    app.mount('#app');
+</script>
+
+</body>
+</html>
